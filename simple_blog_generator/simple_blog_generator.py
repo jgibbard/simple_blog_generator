@@ -341,16 +341,3 @@ class SimpleBlogGenerator():
         html = bs4.BeautifulSoup(html_string, 'html.parser')
         with open(file_name, "w") as f:
             f.write(html.prettify())
-
-if __name__ == "__main__":
-
-    if len(sys.argv) != 2:
-        print("Error: No config file supplied")
-        print("Usage: simple_blog_generator.py <path_to_config_file>")
-        exit(1)
-
-    with open(sys.argv[1], "r") as config_file:
-        settings = json.load(config_file)
-
-    blog = SimpleBlogGenerator(**settings)
-    blog.generate()
