@@ -1,0 +1,36 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">        
+        <meta name="description" content="{{ description }}">
+        <meta name="keywords" content="{{ tags }}">
+        <meta name="author" content="{{ author }}">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>{{ title }}</title>
+        <link rel="stylesheet" href="{{ base_url }}/static/style.css">
+        {% for additional_style in additional_styles %}
+        <link rel="stylesheet" href="{{ base_url }}/static/{{ additional_style }}">
+        {% endfor %}
+        {% for local_style in local_styles %}
+        <link rel="stylesheet" href="{{ local_style }} ">
+        {% endfor %}
+        <link rel="icon" href="{{ base_url }}/static/favicon.png">
+    </head>
+    <body>
+        <header>
+            {{ website_name }}
+        </header>
+        <nav>
+            <li><a href="{{ base_url }}">Home</a></li>
+            {% for category in categories %}
+            <li><a href="{{ base_url }}/{{ category.lower() }}">{{ category }}</a></li>
+            {% endfor %}
+        </nav>
+        <main>
+            {% block content %}{% endblock %}
+        </main>
+        <footer>
+            &copy; {{ copyright }}.
+        </footer>
+    </body>
+</html>

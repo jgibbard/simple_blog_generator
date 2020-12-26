@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+<h1>{{ category }}</h1>
+<section>
+    {% for post in posts %}
+    <article>
+        <h2><a href="{{ base_url }}/{{ post.url }}">{{ post.title }}</a></h2>
+        <p>{{ post.description }}</p>
+    </article>        
+    {% endfor %}
+</section>
+
+<section>
+    {% if previous_page %}
+    <h2 class="more-posts-enabled"><a href="{{ previous_page }} ">Previous posts</a></h2>
+    {% else %}
+    <h2 class="more-posts-disabled"><a href="{{ previous_page }} ">Previous posts</a></h2>
+    {% endif %}
+    {% if next_page %}
+    <h2 class="more-posts-enabled"><a href="{{ next_page }} ">Next posts</a></h2>
+    {% else %}
+    <h2 class="more-posts-disabled"><a href="{{ next_page }} ">Next posts</a></h2>
+    {% endif %}
+</section>
+
+{% endblock %}
