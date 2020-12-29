@@ -1,5 +1,9 @@
 {% extends "base.html" %}
 
+{% block header %}
+<h1>{{ website_name }}/{{ page_category.lower() }}</h1>
+{% endblock %}
+
 {% block content %}
 <article>
     {{ article }}

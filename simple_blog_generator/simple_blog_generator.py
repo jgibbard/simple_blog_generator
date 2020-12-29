@@ -7,7 +7,6 @@ import pathlib
 import shutil
 import sys
 
-import bs4
 import jinja2
 import markdown
 
@@ -24,7 +23,7 @@ class SimpleBlogGenerator():
                  copyright=None,
                  date_format="%Y/%m/%d",
                  category_page_post_limit=10,
-                 index_page_category_post_limit=5):
+                 index_page_post_limit=5):
 
         self.content_directory = content_directory
         themes_directory = os.path.join(str(pathlib.Path(__file__).parent), "themes")
@@ -39,7 +38,7 @@ class SimpleBlogGenerator():
         self.website_description = website_description
         self.date_format = date_format
         self.category_page_post_limit = int(category_page_post_limit)
-        self.index_page_category_post_limit = int(index_page_category_post_limit)
+        self.index_page_post_limit = int(index_page_post_limit)
         # Use a copyright statement if provided, otherwise use current year and default author
         if copyright:
             self.copyright = copyright
@@ -80,7 +79,7 @@ class SimpleBlogGenerator():
     def get_most_recent_post_titles(self, category, number, offset=0):
         # Validate inputs
         assert number != 0
-        assert category in self.categories
+        assert category in self.categories or category == "all_posts"
         # If the posts haven't been sorted yet, then sort them
         if not self.sorted_posts:
            self._sort_posts()
@@ -147,7 +146,9 @@ class SimpleBlogGenerator():
                 # Set default values
                 self.posts[post_title]["post"] = {"local_styles":[],
                                                   "global_styles":[],
-                                                  "author":self.default_author}
+                                                  "author":self.default_author,
+                                                  "description":"",
+                                                  "main_image":""}
                 # Required post metadata
                 if "title" in meta:
                     self.posts[post_title]["post"]["title"] = meta["title"][0]
@@ -170,16 +171,23 @@ class SimpleBlogGenerator():
                     self.posts[post_title]["post"]["local_styles"] = meta["local_styles"]
                 if "author" in meta:
                     self.posts[post_title]["post"]["author"] = meta["author"][0]
+                if "description" in meta:
+                    self.posts[post_title]["post"]["description"] = meta["description"][0]
+                if "main_image" in meta:
+                    self.posts[post_title]["post"]["main_image"] = meta["main_image"][0]
 
     def _sort_posts(self):
         if not self.posts:
             self._get_posts()
         self.sorted_posts = {category : list() for category in self.categories}
+        # Add all posts category
+        self.sorted_posts["all_posts"] = list()
         # For each category extract the post names and dates
         for post_title, post_details in self.posts.items():
             date_string = post_details["post"]["date"]
             date = datetime.datetime.strptime(date_string, self.date_format)
             self.sorted_posts[post_details["category"]].append((post_title, date))
+            self.sorted_posts["all_posts"].append((post_title, date))
 
         # Remove all categories with no posts
         self.categories = [
@@ -192,10 +200,12 @@ class SimpleBlogGenerator():
         for category in self.categories:
             self.sorted_posts[category] = sorted(
                 self.sorted_posts[category], key=lambda elem : elem[1], reverse=True)
+        self.sorted_posts["all_posts"] = sorted(
+                self.sorted_posts["all_posts"], key=lambda elem : elem[1], reverse=True)
 
     def _read_markdown(self, filename):
         with open(filename, "r") as f:
-            md = markdown.Markdown(extensions=["meta"])
+            md = markdown.Markdown(extensions=["meta","fenced_code", "codehilite"])
             html = md.convert(f.read())
             meta = md.Meta
             return meta, html
@@ -236,6 +246,7 @@ class SimpleBlogGenerator():
                     website_name=self.website_name,
                     base_url="..",
                     categories=self.categories,
+                    page_category=post_details["category"],
                     **post_details["post"]
                     )
                 )
@@ -261,7 +272,7 @@ class SimpleBlogGenerator():
                 author=self.default_author,
                 title=category,
                 description=f"Posts about {category}.",
-                category=category,
+                page_category=category,
                 previous_page=previous_page,
                 next_page=next_page,
                 posts=posts_on_this_page
@@ -310,16 +321,14 @@ class SimpleBlogGenerator():
 
     def _generate_home_page(self):
         assert self.posts is not None
-        assert self.sorted_posts is not None
+        assert self.sorted_posts is not None      
 
-        home_posts = {category : list() for category in self.categories}
+        home_posts_titles = self.get_most_recent_post_titles(
+            "all_posts", self.index_page_post_limit, 0)
 
-        for category in self.categories:
-            category_posts_titles = self.get_most_recent_post_titles(
-                category, self.index_page_category_post_limit, 0)
-
-            for post_title in category_posts_titles:
-                home_posts[category].append(self.posts[post_title]["post"])
+        home_posts = []
+        for post_title in home_posts_titles:
+            home_posts.append(self.posts[post_title]["post"])
 
         home_template = self.template_env.get_template("home.html")
 
@@ -330,6 +339,7 @@ class SimpleBlogGenerator():
                 website_name=self.website_name,
                 base_url="",
                 categories=self.categories,
+                page_category="Home",
                 author=self.default_author,
                 title=self.website_name,
                 description=self.website_description,
@@ -338,6 +348,5 @@ class SimpleBlogGenerator():
             )
 
     def _write_html_file(self, file_name, html_string):
-        html = bs4.BeautifulSoup(html_string, 'html.parser')
         with open(file_name, "w") as f:
-            f.write(html.prettify())
+            f.write(html_string)

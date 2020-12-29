@@ -18,17 +18,23 @@
     </head>
     <body>
         <header>
-            {{ website_name }}
+            {% block header %}<h1>{{ website_name }}</h1>{% endblock %}            
         </header>
-        <nav>
-            <li><a href="{{ base_url }}">Home</a></li>
+        <nav class="menu">
+            <a {% if page_category == "Home" %} class="active" {% endif %} href="{{ base_url }}">Home</a>
             {% for category in categories %}
-            <li><a href="{{ base_url }}/{{ category.lower() }}">{{ category }}</a></li>
+            <a {% if page_category == category %} class="active" {% endif %} href="{{ base_url }}/{{ category.lower() }}">{{ category }}</a>
             {% endfor %}
         </nav>
         <main>
             {% block content %}{% endblock %}
         </main>
+        <nav class="back_forward_nav">
+            {% block back_forward_nav %}
+            <a class="nav_button_disabled" href="{{ base_url }}">Previous</a>
+            <a class="nav_button_disabled" href="{{ base_url }}">Next</a>
+            {% endblock %}     
+        </nav>
         <footer>
             &copy; {{ copyright }}.
         </footer>

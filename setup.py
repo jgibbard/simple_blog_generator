@@ -9,7 +9,7 @@ setuptools.setup(
     packages=setuptools.find_packages(),
     package_data={"": ["themes/*/static/*","themes/*/templates/*.html"]},
     scripts=["generate_blog"],
-    install_requires=["wheel", "jinja2", "markdown", "bs4"],
+    install_requires=["wheel", "jinja2", "markdown"],
     classifiers=["Intended Audience :: Developers",
                  "Natural Language :: English"
                  "Operating System :: OS Independent",

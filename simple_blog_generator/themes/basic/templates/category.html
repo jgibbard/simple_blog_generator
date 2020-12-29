@@ -1,28 +1,41 @@
 {% extends "base.html" %}
 
+{% block header %}
+<h1>{{ website_name }}/{{ page_category.lower() }}</h1>
+{% endblock %}
+
 {% block content %}
-
-<h1>{{ category }}</h1>
-<section>
-    {% for post in posts %}
-    <article>
-        <h2><a href="{{ base_url }}/{{ post.url }}">{{ post.title }}</a></h2>
-        <p>{{ post.description }}</p>
-    </article>        
-    {% endfor %}
-</section>
-
-<section>
-    {% if previous_page %}
-    <h2 class="more-posts-enabled"><a href="{{ previous_page }} ">Previous posts</a></h2>
-    {% else %}
-    <h2 class="more-posts-disabled"><a href="{{ previous_page }} ">Previous posts</a></h2>
-    {% endif %}
-    {% if next_page %}
-    <h2 class="more-posts-enabled"><a href="{{ next_page }} ">Next posts</a></h2>
-    {% else %}
-    <h2 class="more-posts-disabled"><a href="{{ next_page }} ">Next posts</a></h2>
-    {% endif %}
-</section>
+{% for post in posts %}
+<a href="{{ base_url }}/{{ post.url }}">
+    <section>
+        <div>
+            {% if post.main_image %}
+            <img src="{{ base_url }}/{{ post.url }}/{{ post.main_image }}" alt="Main image for {{ post.title }}">
+            {% else %}
+                <img src="{{ base_url }}/static/default_image.svg" alt="{{ post.title }}">
+            {% endif %}
+        </div>
+        <div>
+            <h2>{{ post.title }}</h2>
+            <p>{{ post.description }}</p>
+        </div>
+    </section>
+</a>
+{% endfor %}
 
 {% endblock %}
+
+{% block back_forward_nav %}
+
+    {% if previous_page %}
+        <a href="{{ previous_page }}">Previous</a>
+    {% else %}
+        <a class="nav_button_disabled" href="#">Previous</a>
+    {% endif %}
+    {% if next_page %}
+        <a href="{{ next_page }}">Next</a>
+    {% else %}
+        <a class="nav_button_disabled" href="#">Next</a>
+    {% endif %}
+
+{% endblock %}   

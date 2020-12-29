@@ -1,15 +1,21 @@
 {% extends "base.html" %}
 
 {% block content %}
-    {% for category, posts in posts.items() %}
-    <section>
-        <h1><a href="{{ category.lower() }}">{{ category }}</a></h1>
-        {% for post in posts %}
-        <article>
-            <h2><a href="{{ post.url }}">{{ post.title }}</a></h2>
-            <p>{{ post.description }}</p>
-        </article>        
-        {% endfor %}
-    </section>
+    {% for post in posts %}
+    <a href="{{ post.url }}">
+        <section>
+            <div>
+                {% if post.main_image %}
+                <img src="{{ post.url }}/{{ post.main_image }}" alt="{{ post.title }}">
+                {% else %}
+                <img src="static/default_image.svg" alt="{{ post.title }}">
+                {% endif %}
+            </div>
+            <div>
+                <h2>{{ post.title }}</h2>
+                <p>{{ post.description }}</p>
+            </div>
+        </section>
+    </a>
     {% endfor %}
 {% endblock %}
