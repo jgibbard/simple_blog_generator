@@ -19,3 +19,18 @@
     </a>
     {% endfor %}
 {% endblock %}
+
+{% block back_forward_nav %}
+
+    {% if previous_page %}
+        <a href="{{ previous_page }}">Previous</a>
+    {% else %}
+        <a class="nav_button_disabled" href="#">Previous</a>
+    {% endif %}
+    {% if next_page %}
+        <a href="{{ next_page }}">Next</a>
+    {% else %}
+        <a class="nav_button_disabled" href="#">Next</a>
+    {% endif %}
+
+{% endblock %}  
