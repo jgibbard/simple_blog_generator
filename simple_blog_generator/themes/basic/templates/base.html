@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
     <head>
-        <meta charset="utf-8">        
+        <meta charset="utf-8">
         <meta name="description" content="{{ description }}">
         <meta name="keywords" content="{{ tags }}">
         <meta name="author" content="{{ author }}">
@@ -18,7 +18,7 @@
     </head>
     <body>
         <header>
-            {% block header %}<h1>{{ website_name }}</h1>{% endblock %}            
+            {% block header %}<h1>{{ website_name }}</h1>{% endblock %}
         </header>
         <nav class="menu">
             <a {% if page_category == "Home" %} class="active" {% endif %} href="{{ base_url }}">Home</a>
@@ -33,7 +33,7 @@
             {% block back_forward_nav %}
             <a class="nav_button_disabled" href="{{ base_url }}">Previous</a>
             <a class="nav_button_disabled" href="{{ base_url }}">Next</a>
-            {% endblock %}     
+            {% endblock %}
         </nav>
         <footer>
             &copy; {{ copyright }}.

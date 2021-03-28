@@ -2,7 +2,7 @@
     box-sizing: border-box;
     font-family: Arial, Helvetica, sans-serif;
   }
-  
+
 body {
     margin: 0;
     font-family: Arial, Helvetica, sans-serif;
@@ -12,6 +12,7 @@ body {
 header, nav, main, footer {
     margin: 0 auto;
     width: 80%;
+    max-width: 1200px
 }
 
 header {
@@ -21,7 +22,7 @@ header {
     box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
     border-radius: 5px 5px 0px 0px;
 }
-    
+
 header > h1 {
     font-family: 'Courier New', Courier, monospace;
     font-size: 40px;
@@ -93,24 +94,37 @@ section > div {
     margin-bottom: auto;
 }
 
-article {
-    border-radius: 5px;
-    margin-top: 20px;
-    padding: 40px;
-    background-color: #f8f8f8;
-    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
+section > div > p {
+    margin: 16px 0px 0px 0px;
 }
 
+.post {
+    margin: 0;
+    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
+    border-radius: 5px 5px 5px 5px;
+}
 
-article > h1 {
+.post_title > h1 {
     background-color: #86C232;
     font-size: 40px;
-    margin: 0px 0px 20px 0px;
-    padding: 15px;
+    margin: 20px 0px 0px 0px;
+    padding: 20px 40px 20px 40px;
     font-weight: bold;
     color: white;
-    border-radius: 5px;
-    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
+    border-radius: 5px 5px 0px 0px;
+}
+
+article {
+    border-radius: 0px 0px 5px 5px;
+    margin-top: 0px;
+    padding: 20px 40px 20px 40px;
+    background-color: #f8f8f8;
+}
+
+article > h1 {
+    font-size: 26px;
+    margin: 15px 0px 15px 0px;
+    color: #222629;
 }
 
 article > h2 {
@@ -134,7 +148,7 @@ article > p {
 
 .image_responsive {
     width: 100%;
-    height: auto;    
+    height: auto;
 }
 
 .image_shadow {
@@ -192,7 +206,7 @@ nav.back_forward_nav {
 p > code {
     color: #86C232;
     font-family: 'Courier New', Courier, monospace;
-    font-weight: bold;  
+    font-weight: bold;
     margin:0px 5px 0px 5px;
 }
 
@@ -213,14 +227,12 @@ footer {
 
 .codehilite pre {
     background-color: #404040;
-    padding: 15px; 
+    padding: 15px;
     font-size: 16px;
     border-radius: 5px;
     box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
     overflow-x: auto;
 }
-
-
 
 .codehilite .hll { background-color: #404040 }
 .codehilite .c { color: #999999; font-style: italic } /* Comment */
@@ -292,7 +304,6 @@ footer {
 .codehilite .vi { color: #40ffff } /* Name.Variable.Instance */
 .codehilite .il { color: #3677a9 } /* Literal.Number.Integer.Long */
 
-
 /* For small screens increase the width and adjust text sizes */
 @media screen and (max-width: 900px) {
     header, nav, main, footer {
@@ -302,8 +313,8 @@ footer {
     header {
         padding: 10px;
     }
-        
-    header > h1 {    
+
+    header > h1 {
         font-size: 24px;
     }
 
@@ -312,8 +323,8 @@ footer {
         margin-right: 5px;
     }
 
-    nav > a {       
-        padding: 10px 12px;      
+    nav > a {
+        padding: 10px 12px;
         font-size: 14px;
     }
 
@@ -322,13 +333,18 @@ footer {
     }
 
     article {
-        margin-top: 10px;
         padding: 7px;
     }
+
+    .post_title > h1 {
+        font-size: 20px;
+        margin: 10px 0px 0px 0px;
+        padding: 10px;
+    }
+
     article > h1 {
         font-size: 20px;
-        margin: 0px 0px 15px 0px;
-        padding: 10px;
+        margin: 10px 0px 10px 0px;
     }
 
     article > h2 {
@@ -341,12 +357,5 @@ footer {
     }
     nav.back_forward_nav {
         margin-top: 10px;
-    }
-}
-
-/* For big screens reduce the width */
-@media screen and (min-width: 2000px) {
-    header, nav, main, footer {
-        width: 60%;
     }
 }

@@ -44,7 +44,7 @@ class SimpleBlogGenerator():
             self.copyright = copyright
         else:
             self.copyright = f"Copyright {datetime.datetime.now().year} {self.default_author}"
-        
+
         self.template_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(searchpath=self.templates_directory))
 
@@ -112,12 +112,12 @@ class SimpleBlogGenerator():
         # Construct dictionary of the most recent posts
         return [self.posts[post_title]["post"] for post_title in post_titles]
 
-    def clean(self):        
+    def clean(self):
         # Clear post cache
         self.posts = None
         self.sorted_posts = None
         # Delete all files in the output directory, but not the directory itself
-        if os.path.isdir(self.output_directory):            
+        if os.path.isdir(self.output_directory):
             for root, dirs, files in os.walk(self.output_directory):
                 for f in files:
                     os.unlink(os.path.join(root, f))
@@ -132,7 +132,7 @@ class SimpleBlogGenerator():
         self.posts = {}
         # Find all posts and get their locations
         for category in self.categories:
-            category_directory = os.path.join(self.content_directory, category)        
+            category_directory = os.path.join(self.content_directory, category)
             post_path_strings = self._get_post_file_paths(category_directory)
             for path_string in post_path_strings:
                 path = pathlib.Path(path_string)
@@ -140,7 +140,7 @@ class SimpleBlogGenerator():
                 # Check for more than one post with the same name
                 if post_title in self.posts:
                     print("Error: Post name must be unique")
-                    exit(1)                
+                    exit(1)
                 # Get the path the assets directory associated with the post
                 # Check if the file is within a directory of the same name
                 if path.parent.name.lower() == post_title:
@@ -151,9 +151,9 @@ class SimpleBlogGenerator():
                 else:
                     # No assets for this post
                     asset_path = None
-                
+
                 meta, html = self._read_markdown(path_string)
-                # Update dictionary with post details                
+                # Update dictionary with post details
                 self.posts[post_title] = {"path": path_string,
                                           "category": category,
                                           "assets": asset_path}
@@ -353,7 +353,7 @@ class SimpleBlogGenerator():
     def _generate_home_pages(self):
         # Generate all home pages
         assert self.posts is not None
-        assert self.sorted_posts is not None      
+        assert self.sorted_posts is not None
         # Get total number of posts
         number_of_posts = len(self.sorted_posts["all_posts"])
         # Get the number of pages required to show all the posts
@@ -389,6 +389,6 @@ class SimpleBlogGenerator():
                 )
 
     def _write_html_file(self, file_name, html_string):
-        # Write the HTML files to the output directory 
+        # Write the HTML files to the output directory
         with open(file_name, "w") as f:
             f.write(html_string)
