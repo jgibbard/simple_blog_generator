@@ -98,6 +98,34 @@ section > div > p {
     margin: 16px 0px 0px 0px;
 }
 
+.snippet {
+    border-radius: 5px;
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f8f8f8;
+    box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
+
+}
+
+.snippet:hover {
+    background-color: #f0eeee;
+}
+
+.snippet > h2 {
+    margin: 0px;
+}
+
+.snippet > div {
+
+    margin-top: auto;
+    margin-bottom: auto;
+}
+
+.snippet > p {
+    margin: 16px 0px 0px 0px;
+
+}
+
 .post {
     margin: 0;
     box-shadow:0 4px 10px 0 rgba(0,0,0,0.2),0 4px 20px 0 rgba(0,0,0,0.19);
@@ -336,6 +364,10 @@ footer {
     }
 
     section {
+        margin-top: 10px;
+    }
+
+    .snippet {
         margin-top: 10px;
     }
 

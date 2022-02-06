@@ -5,23 +5,35 @@
 {% endblock %}
 
 {% block content %}
-{% for post in posts %}
-<a href="{{ base_url }}/{{ post.url }}">
-    <section>
-        <div>
-            {% if post.main_image %}
-            <img src="{{ base_url }}/{{ post.url }}/{{ post.main_image }}" alt="Main image for {{ post.title }}">
-            {% else %}
-                <img src="{{ base_url }}/static/default_image.svg" alt="{{ post.title }}">
-            {% endif %}
-        </div>
-        <div>
+
+{% if page_category != "Snippets" %}
+    {% for post in posts %}
+        <a href="{{ base_url }}/{{ post.url }}">
+            <section>
+                <div>
+                    {% if post.main_image %}
+                    <img src="{{ base_url }}/{{ post.url }}/{{ post.main_image }}" alt="Main image for {{ post.title }}">
+                    {% else %}
+                        <img src="{{ base_url }}/static/default_image.svg" alt="{{ post.title }}">
+                    {% endif %}
+                </div>
+                <div>
+                    <h2>{{ post.title }}</h2>
+                    <p>{{ post.description }}</p>
+                </div>
+            </section>
+        </a>
+    {% endfor %}
+{% else %}
+    {% for post in posts %}
+
+        <div class="snippet">
             <h2>{{ post.title }}</h2>
-            <p>{{ post.description }}</p>
+            <p>{{ post.article }} </p>
         </div>
-    </section>
-</a>
-{% endfor %}
+
+    {% endfor %}
+{% endif %}
 
 {% endblock %}
 

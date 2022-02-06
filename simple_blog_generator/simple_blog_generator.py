@@ -23,7 +23,9 @@ class SimpleBlogGenerator():
                  copyright=None,
                  date_format="%Y/%m/%d",
                  category_page_post_limit=10,
-                 index_page_post_limit=5):
+                 index_page_post_limit=5,
+                 exclude_category_from_home="",
+                 exclude_category_from_individual_page=""):
 
         self.content_directory = content_directory
         themes_directory = os.path.join(str(pathlib.Path(__file__).parent), "themes")
@@ -45,6 +47,13 @@ class SimpleBlogGenerator():
         else:
             self.copyright = f"Copyright {datetime.datetime.now().year} {self.default_author}"
 
+        self.exclude_category_from_home = \
+            [cat.strip() for cat in exclude_category_from_home.split(",")]
+    
+        self.exclude_category_from_individual_page = \
+            [cat.strip() for cat in exclude_category_from_individual_page.split(",")]
+            
+
         self.template_env = jinja2.Environment(
             loader=jinja2.FileSystemLoader(searchpath=self.templates_directory))
 
@@ -53,6 +62,8 @@ class SimpleBlogGenerator():
         self.categories = next(os.walk(self.content_directory))[1]
         # There must be at least one category
         assert len(self.categories) > 0
+
+        assert "Home" not in self.categories
 
         self.posts = None
         self.sorted_posts = None
@@ -203,7 +214,8 @@ class SimpleBlogGenerator():
             date_string = post_details["post"]["date"]
             date = datetime.datetime.strptime(date_string, self.date_format)
             self.sorted_posts[post_details["category"]].append((post_title, date))
-            self.sorted_posts["all_posts"].append((post_title, date))
+            if post_details["category"] not in self.exclude_category_from_home:
+                self.sorted_posts["all_posts"].append((post_title, date))
         # Remove all categories with no posts
         self.categories = [
             category for category in self.categories if len(self.sorted_posts[category])]
@@ -257,7 +269,9 @@ class SimpleBlogGenerator():
                                 ignore=shutil.ignore_patterns("*.md"))
             # Otherwise just make the post directory
             else:
-                os.mkdir(os.path.join(self.output_directory, post_title), self.output_permissions)
+                if post_details["category"] not in self.exclude_category_from_individual_page:
+                    os.mkdir(os.path.join(
+                        self.output_directory, post_title), self.output_permissions)
 
     def _get_page_name(self, page_number, number_of_pages):
         # Get the current, next, and previous page names
@@ -287,17 +301,18 @@ class SimpleBlogGenerator():
         assert self.posts is not None
         post_template = self.template_env.get_template("post.html")
         for post_title, post_details in self.posts.items():
-            output_file = os.path.join(self.output_directory, post_title, "index.html")
-            self._write_html_file(output_file,
-                post_template.render(
-                    copyright=self.copyright,
-                    website_name=self.website_name,
-                    base_url="..",
-                    categories=self.categories,
-                    page_category=post_details["category"],
-                    **post_details["post"]
+            if post_details["category"] not in self.exclude_category_from_individual_page:
+                output_file = os.path.join(self.output_directory, post_title, "index.html")
+                self._write_html_file(output_file,
+                    post_template.render(
+                        copyright=self.copyright,
+                        website_name=self.website_name,
+                        base_url="..",
+                        categories=self.categories,
+                        page_category=post_details["category"],
+                        **post_details["post"]
+                        )
                     )
-                )
 
     def _generate_category_page(self, category, page_name, previous_page, next_page, offset):
         # Generate a single category page
@@ -316,7 +331,7 @@ class SimpleBlogGenerator():
                 base_url="..",
                 categories=self.categories,
                 author=self.default_author,
-                title=category,
+                title=category + " - James Gibbard",
                 description=f"Posts about {category}.",
                 page_category=category,
                 previous_page=previous_page,
@@ -380,7 +395,7 @@ class SimpleBlogGenerator():
                     categories=self.categories,
                     page_category="Home",
                     author=self.default_author,
-                    title=self.website_name,
+                    title=self.website_name + " - James Gibbard",
                     description=self.website_description,
                     previous_page=previous_page,
                     next_page=next_page,
