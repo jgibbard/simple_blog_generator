@@ -234,7 +234,7 @@ class SimpleBlogGenerator():
     def _read_markdown(self, filename):
         # Open a markdown file and convert it to HTML
         with open(filename, "r") as f:
-            md = markdown.Markdown(extensions=["meta","fenced_code", "codehilite", "attr_list"],
+            md = markdown.Markdown(extensions=["meta","fenced_code", "codehilite", "attr_list", "tables"],
                                    extension_configs={"codehilite":{"guess_lang":False}})
             html = md.convert(f.read())
             meta = md.Meta
